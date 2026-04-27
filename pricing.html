@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-fot100.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/favicon-fot100.png">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    
+    <title>Стоимость — Татьяна Федулина | Профессиональный фотограф</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;600&display=swap');
+        body { font-family: 'Inter', system_ui, sans-serif; }
+        .logo-font { font-family: 'Playfair Display', serif; }
+        .price-card { transition: all 0.3s ease; border: 2px solid transparent; }
+        .price-card:hover { border-color: #fbbf24; transform: translateY(-5px); }
+        .price-card.popular { border-color: #fbbf24; background: linear-gradient(135deg, rgba(251,191,36,0.1) 0%, rgba(0,0,0,0) 100%); }
+        
+        /* FAQ стили */
+        .faq-item {
+            border: 1px solid #27272a;
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .faq-item:hover {
+            border-color: #fbbf24;
+        }
+        .faq-item summary {
+            padding: 20px 24px;
+            cursor: pointer;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #18181b;
+            transition: all 0.3s ease;
+        }
+        .faq-item summary:hover {
+            background: #27272a;
+        }
+        .faq-item summary::-webkit-details-marker {
+            display: none;
+        }
+        .faq-item[open] summary {
+            background: #27272a;
+            border-bottom: 1px solid #3f3f46;
+        }
+        .faq-icon {
+            transition: transform 0.3s ease;
+            color: #fbbf24;
+        }
+        .faq-item[open] .faq-icon {
+            transform: rotate(180deg);
+        }
+        .faq-answer {
+            padding: 24px;
+            background: #18181b;
+            color: #a1a1aa;
+            line-height: 1.7;
+        }
+    </style>
+</head>
+<body class="bg-zinc-950 text-zinc-200">
+
+    <!-- NAVBAR -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-zinc-950/90 backdrop-blur-lg border-b border-zinc-800">
+        <div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                <i class="fa-solid fa-camera w-10 h-10 bg-amber-400 rounded-full flex items-center justify-center text-zinc-950 text-2xl"></i>
+                <span class="logo-font text-3xl font-semibold tracking-tight text-white">Федулина</span>
+            </a>
+            <div class="hidden md:flex items-center gap-8 text-sm font-medium">
+                <a href="index.html" class="nav-link text-zinc-300 hover:text-white">Главная</a>
+                <a href="index.html#about" class="nav-link text-zinc-300 hover:text-white">Обо мне</a>
+                <a href="portfolio.html" class="nav-link text-zinc-300 hover:text-white">Портфолио</a>
+                <a href="pricing.html" class="nav-link text-amber-400">Стоимость</a>
+                <a href="index.html#contact" class="nav-link text-zinc-300 hover:text-white">Контакты</a>
+            </div>
+            <button onclick="toggleMobileMenu()" class="md:hidden text-3xl text-white">
+                <i class="fa-solid fa-bars" id="menuIcon"></i>
+            </button>
+        </div>
+        <div id="mobileMenu" class="hidden md:hidden bg-zinc-900 border-t border-zinc-800">
+            <div class="flex flex-col py-6 px-6 text-lg font-medium">
+                <a href="index.html" onclick="toggleMobileMenu()" class="py-4 border-b border-zinc-800">Главная</a>
+                <a href="index.html#about" onclick="toggleMobileMenu()" class="py-4 border-b border-zinc-800">Обо мне</a>
+                <a href="portfolio.html" onclick="toggleMobileMenu()" class="py-4 border-b border-zinc-800">Портфолио</a>
+                <a href="pricing.html" onclick="toggleMobileMenu()" class="py-4 border-b border-zinc-800">Стоимость</a>
+                <a href="index.html#contact" onclick="toggleMobileMenu()" class="py-4">Контакты</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="pt-32 pb-16 px-6 text-center">
+        <div class="max-w-4xl mx-auto">
+            <span class="text-amber-400 text-sm tracking-widest">ПРАЙС-ЛИСТ</span>
+            <h1 class="text-5xl md:text-6xl font-bold logo-font mt-4 mb-6 text-white">Стоимость съёмки</h1>
+            <p class="text-xl text-zinc-400">Прозрачные цены • Без скрытых платежей • Гарантия качества</p>
+        </div>
+    </section>
+
+    <!-- ЦЕНЫ -->
+    <section class="py-16 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid md:grid-cols-3 gap-8 mb-20">
+                
+                <!-- Портрет -->
+                <div class="price-card bg-zinc-900 rounded-3xl p-8 text-center">
+                    <div class="w-16 h-16 bg-amber-400/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fa-solid fa-user text-amber-400 text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold logo-font mb-2">Портрет</h3>
+                    <p class="text-zinc-400 text-sm mb-6">Индивидуальная съёмка</p>
+                    <div class="text-4xl font-bold text-amber-400 mb-6">от 5 000 ₽</div>
+                    <ul class="text-left text-zinc-300 space-y-3 mb-8">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> 1 час съёмки</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> 15-20 фото в ретуши</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> Фото в высоком разрешении</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> Помощь с позированием</li>
+                    </ul>
+                    <a href="index.html#contact" class="inline-block px-8 py-3 border border-amber-400 text-amber-400 hover:bg-amber-400 hover:text-zinc-950 transition-all rounded-full font-medium">Забронировать</a>
+                </div>
+
+                <!-- Свадьба (популярная) -->
+                <div class="price-card popular bg-zinc-900 rounded-3xl p-8 text-center relative">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-amber-400 text-zinc-950 text-sm font-semibold rounded-full">Популярное</div>
+                    <div class="w-16 h-16 bg-amber-400/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fa-solid fa-heart text-amber-400 text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold logo-font mb-2">Свадьба</h3>
+                    <p class="text-zinc-400 text-sm mb-6">Полный день с вами</p>
+                    <div class="text-4xl font-bold text-amber-400 mb-6">от 25 000 ₽</div>
+                    <ul class="text-left text-zinc-300 space-y-3 mb-8">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> До 8 часов съёмки</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> 300+ фото в обработке</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> Онлайн-галерея</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> Помощь с таймингом</li>
+                    </ul>
+                    <a href="index.html#contact" class="inline-block px-8 py-3 bg-amber-400 text-zinc-950 hover:bg-amber-300 transition-all rounded-full font-semibold">Обсудить детали</a>
+                </div>
+
+                <!-- Семейная -->
+                <div class="price-card bg-zinc-900 rounded-3xl p-8 text-center">
+                    <div class="w-16 h-16 bg-amber-400/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fa-solid fa-users text-amber-400 text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold logo-font mb-2">Семейная</h3>
+                    <p class="text-zinc-400 text-sm mb-6">Съёмка с близкими</p>
+                    <div class="text-4xl font-bold text-amber-400 mb-6">от 8 000 ₽</div>
+                    <ul class="text-left text-zinc-300 space-y-3 mb-8">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> 1.5 часа съёмки</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> 25-30 фото в ретуши</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> Фото в высоком разрешении</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> Работа с детьми</li>
+                    </ul>
+                    <a href="index.html#contact" class="inline-block px-8 py-3 border border-amber-400 text-amber-400 hover:bg-amber-400 hover:text-zinc-950 transition-all rounded-full font-medium">Забронировать</a>
+                </div>
+
+            </div>
+
+            <!-- Доп. услуги (ИСПРАВЛЕНО ДЛЯ МОБИЛЬНЫХ) -->
+            <div class="max-w-3xl mx-auto bg-zinc-900 rounded-3xl p-6 md:p-8 mb-16">
+                <h3 class="text-2xl font-bold logo-font text-center mb-8">Дополнительно</h3>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center py-3 border-b border-zinc-800">
+                        <span class="text-zinc-300 flex-1 pr-4">Дополнительный час съёмки</span>
+                        <span class="font-semibold text-amber-400 whitespace-nowrap">+ 3 000 ₽</span>
+                    </div>
+                    <div class="flex justify-between items-center py-3 border-b border-zinc-800">
+                        <span class="text-zinc-300 flex-1 pr-4">Срочная обработка (24 часа)</span>
+                        <span class="font-semibold text-amber-400 whitespace-nowrap">+ 50%</span>
+                    </div>
+                    <div class="flex justify-between items-center py-3 border-b border-zinc-800">
+                        <span class="text-zinc-300 flex-1 pr-4">Печать фото 10×15 (за шт.)</span>
+                        <span class="font-semibold text-amber-400 whitespace-nowrap">150 ₽</span>
+                    </div>
+                    <div class="flex justify-between items-center py-3 border-b border-zinc-800">
+                        <span class="text-zinc-300 flex-1 pr-4">Выезд за пределы города</span>
+                        <span class="font-semibold text-amber-400 whitespace-nowrap">от 2 000 ₽</span>
+                    </div>
+                    <div class="flex justify-between items-center py-3">
+                        <span class="text-zinc-300 flex-1 pr-4">Фотокнига премиум (20 стр.)</span>
+                        <span class="font-semibold text-amber-400 whitespace-nowrap">от 4 500 ₽</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ (ВОПРОС-ОТВЕТ) -->
+            <div class="max-w-3xl mx-auto mb-20">
+                <h3 class="text-2xl font-bold logo-font text-center mb-8">Частые вопросы</h3>
+                <div class="space-y-4">
+                    
+                    <details class="faq-item">
+                        <summary>
+                            <span class="font-medium text-zinc-200">Как проходит бронирование даты?</span>
+                            <i class="fa-solid fa-chevron-down faq-icon"></i>
+                        </summary>
+                        <div class="faq-answer">
+                            Дата считается забронированной после подписания договора и предоплаты в размере 10 000 ₽.
+                        </div>
+                    </details>
+
+                    <details class="faq-item">
+                        <summary>
+                            <span class="font-medium text-zinc-200">Как происходит передача фото?</span>
+                            <i class="fa-solid fa-chevron-down faq-icon"></i>
+                        </summary>
+                        <div class="faq-answer">
+                            Готовые фото вы получаете в течение 2-3 недель после съёмки. 
+                            Передача осуществляется через защищённое облачное хранилище 
+                            с возможностью просмотра, скачивания и выбора фото для печати. 
+                            Ссылка на галерею отправляется в мессенджер или на email.
+                        </div>
+                    </details>
+
+                    <details class="faq-item">
+                        <summary>
+                            <span class="font-medium text-zinc-200">Можно ли получить исходники?</span>
+                            <i class="fa-solid fa-chevron-down faq-icon"></i>
+                        </summary>
+                        <div class="faq-answer">
+                            Фото будут обработаны в соответствии с моим портфолио и представлением о торжестве. Клиенту не передаются все исходные материалы, передаются только результаты обработки. Передача материалов в формате "RAW" клиенту не осуществляется.
+                        </div>
+                    </details>
+
+                </div>
+            </div>
+
+            <!-- CTA -->
+            <div class="text-center mt-16">
+                <p class="text-zinc-400 mb-6">Не нашли подходящий вариант? Напишите — обсудим ваш проект!</p>
+                <a href="index.html#contact" class="inline-flex items-center gap-3 px-10 py-4 bg-amber-400 hover:bg-amber-300 text-zinc-950 font-semibold rounded-2xl transition-all">
+                    <i class="fa-solid fa-paper-plane"></i>Связаться со мной
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ЮРИДИЧЕСКАЯ ИНФОРМАЦИЯ -->
+    <section class="py-12 px-6 border-t border-zinc-800">
+        <div class="max-w-4xl mx-auto text-center">
+            <p class="text-zinc-500 text-sm leading-relaxed">
+                * Все цены, указанные на этом сайте, приведены как справочная информация 
+                и не являются публичной офертой согласно ст. 437 ГК РФ. 
+                Окончательная стоимость съёмки рассчитывается индивидуально 
+                и зависит от формата, локации, длительности и дополнительных услуг. 
+                Актуальную стоимость уточняйте при бронировании.
+            </p>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-black py-12 text-center text-zinc-500 text-sm">
+        <p>© 2026 Татьяна Федулина. Все права защищены.</p>
+        <p class="text-zinc-600 mt-2">Пенза • Москва • По всему миру</p>
+    </footer>
+
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu'); const icon = document.getElementById('menuIcon');
+            menu.classList.toggle('hidden');
+            if (menu.classList.contains('hidden')) { icon.classList.remove('fa-xmark'); icon.classList.add('fa-bars'); }
+            else { icon.classList.remove('fa-bars'); icon.classList.add('fa-xmark'); }
+        }
+    </script>
+</body>
+</html>
