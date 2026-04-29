@@ -1,0 +1,24 @@
+﻿backend:
+  name: github
+  repo: Tanka2610/fedulina-works
+  branch: main
+
+media_folder: "images/portfolio"
+public_folder: "images/portfolio"
+
+collections:
+  - name: "albums"
+    label: "Альбомы"
+    folder: "data"
+    create: true
+    editor:
+      preview: false
+    fields:
+      - {label: "Название альбома", name: "title", widget: "string"}
+      - {label: "Категория", name: "category", widget: "select", options: [
+          {label: "Свадебные", value: "wedding"},
+          {label: "Портретные", value: "portrait"},
+          {label: "Студийные", value: "studio"}
+        ]}
+      - {label: "Обложка (thumb)", name: "cover", widget: "image"}
+      - {label: "Фотографии", name: "photos", widget: "list", field: {label: "Фото", name: "url", widget: "image"}}
