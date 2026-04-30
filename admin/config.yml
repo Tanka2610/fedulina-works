@@ -3,43 +3,33 @@
   repo: Tanka2610/fedulina-works
   branch: main
   auth_type: pkce
-  client_id: 'Ov23likuCkvxAtrgR4Jq'
 
-media_folder: "images/portfolio"
-public_folder: "images/portfolio"
+media_folder: images/portfolio
+public_folder: /images/portfolio
 
 collections:
-  - name: "albums"
-    label: "Альбомы"
-    folder: "data"
+  - name: albums
+    label: Альбомы
+    folder: data
     create: true
-    slug: "{{slug}}"
     fields:
-      - label: "Название альбома"
-        name: "title"
-        widget: "string"
-        required: true
-      - label: "Категория"
-        name: "category"
-        widget: "select"
+      - name: title
+        label: Название
+        widget: string
+      - name: category
+        label: Категория
+        widget: select
         options:
-          - label: "Свадебные"
-            value: "wedding"
-          - label: "Портретные"
-            value: "portrait"
-          - label: "Студийные"
-            value: "studio"
-        required: true
-      - label: "Обложка (thumb)"
-        name: "cover"
-        widget: "image"
-        required: true
-      - label: "Фотографии"
-        name: "photos"
-        widget: "list"
-        required: true
-        fields:
-          - label: "Фото"
-            name: "url"
-            widget: "image"
-            required: true
+          - wedding
+          - portrait
+          - studio
+      - name: cover
+        label: Обложка
+        widget: image
+      - name: photos
+        label: Фото
+        widget: list
+        field:
+          name: url
+          label: Фото
+          widget: image
