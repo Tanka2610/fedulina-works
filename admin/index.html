@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Админ-панель — Татьяна Федулина</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <!-- Конфиг передаётся ДО загрузки CMS -->
+  <script>
+    window.CMS_CONFIG = {
+      backend: {
+        name: 'github',
+        repo: 'Tanka2610/fedulina-works',
+        branch: 'main',
+        auth_type: 'pkce'
+      },
+      media_folder: 'images/portfolio',
+      public_folder: '/images/portfolio',
+      collections: [
+        {
+          name: 'albums',
+          label: 'Альбомы',
+          folder: 'data',
+          create: true,
+          fields: [
+            { name: 'title', label: 'Название', widget: 'string' },
+            { 
+              name: 'category', 
+              label: 'Категория', 
+              widget: 'select', 
+              options: ['wedding', 'portrait', 'studio'] 
+            },
+            { name: 'cover', label: 'Обложка', widget: 'image' },
+            { 
+              name: 'photos', 
+              label: 'Фото', 
+              widget: 'list', 
+              field: { name: 'url', label: 'Фото', widget: 'image' } 
+            }
+          ]
+        }
+      ]
+    };
+  </script>
+  
+  <!-- Локальный скрипт -->
+  <script src="./decap-cms.js"></script>
+</body>
+</html>
