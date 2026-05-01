@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <title>Админ-панель — Татьяна Федулина</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <!-- Sveltia CMS через CDN -->
+  <script type="module">
+    import { mount } from 'https://cdn.jsdelivr.net/npm/sveltia-cms@0.158.1/dist/index.js';
+    
+    const config = {
+      backend: {
+        name: 'github',
+        repo: 'Tanka2610/fedulina-works',
+        branch: 'main',
+        auth_type: 'pkce'
+      },
+      media_folder: 'images/portfolio',
+      public_folder: 'images/portfolio',
+      collections: [
+        {
+          name: 'albums',
+          label: 'Альбомы',
+          folder: 'data',
+          create: true,
+          slug: '{{year}}-{{month}}-{{day}}-{{slug}}',
+          fields: [
+            { label: 'Название альбома', name: 'title', widget: 'string', required: true },
+            { 
+              label: 'Категория', 
+              name: 'category', 
+              widget: 'select', 
+              required: true,
+              options: [
+                { label: 'Свадебные', value: 'wedding' },
+                { label: 'Портретные', value: 'portrait' },
+                { label: 'Студийные', value: 'studio' }
+              ]
+            },
+            { label: 'Обложка (thumb)', name: 'cover', widget: 'image', required: true },
+            { 
+              label: 'Фотографии', 
+              name: 'photos', 
+              widget: 'list', 
+              required: true,
+              min: 1,
+              fields: [
+                { label: 'Фото', name: 'url', widget: 'image', required: true }
+              ] 
+            }
+          ]
+        }
+      ]
+    };
+    
+    // Инициализация
+    document.addEventListener('DOMContentLoaded', () => {
+      mount({ target: document.body, props: { config } });
+    });
+  </script>
+  
+  <style>
+    body { margin: 0; background: #fff; }
+  </style>
+</head>
+<body>
+  <div id="app">Загрузка админ-панели...</div>
+</body>
+</html>
