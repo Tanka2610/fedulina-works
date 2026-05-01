@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -68,10 +68,10 @@
                 <h1 class="text-5xl font-bold logo-font mt-4">Портфолио</h1>
             </div>
             <div class="flex flex-wrap justify-center gap-4 mb-12" id="category-filters">
-                <button onclick="filterCategory('all')" class="category-btn active px-8 py-4 rounded-3xl text-sm font-medium bg-amber-400 text-zinc-950">Все работы</button>
-                <button onclick="filterCategory('wedding')" class="category-btn px-8 py-4 rounded-3xl text-sm font-medium bg-white/10 hover:bg-amber-400 hover:text-zinc-950">Свадебные</button>
-                <button onclick="filterCategory('portrait')" class="category-btn px-8 py-4 rounded-3xl text-sm font-medium bg-white/10 hover:bg-amber-400 hover:text-zinc-950">Портретные</button>
-                <button onclick="filterCategory('studio')" class="category-btn px-8 py-4 rounded-3xl text-sm font-medium bg-white/10 hover:bg-amber-400 hover:text-zinc-950">Студийные</button>
+                <button onclick="filterCategory('all', this)" class="category-btn active px-8 py-4 rounded-3xl text-sm font-medium bg-amber-400 text-zinc-950">Все работы</button>
+                <button onclick="filterCategory('wedding', this)" class="category-btn px-8 py-4 rounded-3xl text-sm font-medium bg-white/10 hover:bg-amber-400 hover:text-zinc-950">Свадебные</button>
+                <button onclick="filterCategory('portrait', this)" class="category-btn px-8 py-4 rounded-3xl text-sm font-medium bg-white/10 hover:bg-amber-400 hover:text-zinc-950">Портретные</button>
+                <button onclick="filterCategory('studio', this)" class="category-btn px-8 py-4 rounded-3xl text-sm font-medium bg-white/10 hover:bg-amber-400 hover:text-zinc-950">Студийные</button>
             </div>
             <div id="portfolio-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
             
@@ -189,7 +189,7 @@
                 );
                 
                 albums = await Promise.all(loadPromises);
-                filterCategory('all');
+                filterCategory('all'); // Программный вызов — без кнопки
                 
             } catch (error) {
                 console.error('Ошибка загрузки альбомов:', error);
@@ -198,13 +198,19 @@
             }
         }
 
-        function filterCategory(cat) {
+        function filterCategory(cat, btnElement = null) {
+            // Сбрасываем все кнопки
             document.querySelectorAll('.category-btn').forEach(btn => {
                 btn.classList.remove('active', 'bg-amber-400', 'text-zinc-950');
                 btn.classList.add('bg-white/10', 'hover:bg-amber-400', 'hover:text-zinc-950');
             });
-            event.target.classList.add('active', 'bg-amber-400', 'text-zinc-950');
-            event.target.classList.remove('bg-white/10', 'hover:bg-amber-400', 'hover:text-zinc-950');
+            
+            // Если передана кнопка (клик пользователя) — подсвечиваем её
+            if (btnElement) {
+                btnElement.classList.add('active', 'bg-amber-400', 'text-zinc-950');
+                btnElement.classList.remove('bg-white/10', 'hover:bg-amber-400', 'hover:text-zinc-950');
+            }
+            
             const grid = document.getElementById('portfolio-grid');
             grid.innerHTML = '';
             const filtered = cat === 'all' ? albums : albums.filter(a => a.category === cat);
