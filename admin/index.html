@@ -6,6 +6,9 @@
   <title>Админ-панель — Татьяна Федулина</title>
 </head>
 <body>
-  <script src="https://unpkg.com/@sveltia/cms@latest/dist/sveltia-cms.umd.min.js"></script>
+  <script type="module">
+    import init from 'https://unpkg.com/@sveltia/cms@0/dist/index.js';
+    init().catch(err => console.error('Sveltia CMS error:', err));
+  </script>
 </body>
 </html>
