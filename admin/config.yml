@@ -1,0 +1,36 @@
+﻿backend:
+  name: github
+  repo: Tanka2610/fedulina-works
+  branch: main
+  # auth_type убираем — по умолчанию будет токен
+
+media_folder: "images/portfolio"
+public_folder: "/images/portfolio"
+
+# ✅ ВАЖНО: Включаем поддержку токенов
+auth:
+  type: token
+
+collections:
+  - name: "albums"
+    label: "Альбомы"
+    folder: "data"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "Название альбома", name: "title", widget: "string", required: true }
+      - label: "Категория"
+        name: "category"
+        widget: "select"
+        required: true
+        options:
+          - { label: "Свадебные", value: "wedding" }
+          - { label: "Портретные", value: "portrait" }
+          - { label: "Студийные", value: "studio" }
+      - { label: "Обложка (thumb)", name: "cover", widget: "image", required: true }
+      - label: "Фотографии"
+        name: "photos"
+        widget: "list"
+        required: true
+        fields:
+          - { label: "Фото", name: "url", widget: "image", required: true }
