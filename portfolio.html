@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -100,7 +100,8 @@
             <span id="modalTitle" class="font-medium"></span>
             <span id="modalCounter" class="ml-3 text-zinc-400"></span>
         </div>
-        <img id="modalImage" src="image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" class="select-none">
+        <!-- ✅ ИСПРАВЛЕНО: добавлено "data:" перед image/gif -->
+        <img id="modalImage" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" class="select-none">
     </div>
 
     <!-- FOOTER -->
@@ -117,20 +118,18 @@
         let currentZoom = 1, isZooming = false, initialPinchDistance = 0, pinchTimeout = null;
         let isPanning = false, panStartX = 0, panStartY = 0, translateX = 0, translateY = 0;
 
-        // ✅ ИСПРАВЛЕННАЯ ФУНКЦИЯ: убирает ведущий / и добавляет /fedulina-works/
+        // ✅ ФУНКЦИЯ: исправляет пути к фото для GitHub Pages
         function fixImagePath(path) {
             if (!path) return '';
             if (path.startsWith('http')) return path;
-            // Убираем ведущий / если есть
             const cleanPath = path.startsWith('/') ? path.substring(1) : path;
-            // Добавляем префикс репозитория
             return '/fedulina-works/' + encodeURI(cleanPath);
         }
 
         // Простой парсер YAML фронт-маттер из Markdown
         function parseFrontMatter(content) {
             const match = content.match(/^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/);
-            if (!match) return { data: {}, body: content };
+            if (!match) return {  {}, body: content };
             
             const frontMatter = match[1];
             const body = match[2];
