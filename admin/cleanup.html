@@ -1,0 +1,307 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Очистка неиспользуемых фото</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 1200px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #18181b;
+      color: #e4e4e7;
+    }
+    h1 { color: #fbbf24; }
+    .btn {
+      background: #fbbf24;
+      color: #18181b;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      margin: 10px 5px;
+    }
+    .btn:hover { background: #f59e0b; }
+    .btn-danger {
+      background: #ef4444;
+      color: white;
+    }
+    .btn-danger:hover { background: #dc2626; }
+    .file-list {
+      background: #27272a;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+    .file-item {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      margin: 5px 0;
+      background: #18181b;
+      border-radius: 4px;
+    }
+    .file-item input { margin-right: 10px; }
+    .file-item img {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      border-radius: 4px;
+      margin-right: 10px;
+    }
+    .stats {
+      background: #27272a;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+    .loading { color: #fbbf24; font-size: 18px; }
+    .token-input {
+      margin: 20px 0;
+      padding: 15px;
+      background: #27272a;
+      border-radius: 8px;
+    }
+    .token-input input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 4px;
+      border: 1px solid #3f3f46;
+      background: #18181b;
+      color: #e4e4e7;
+    }
+  </style>
+</head>
+<body>
+  <h1>🗑️ Очистка неиспользуемых фото</h1>
+  
+  <!-- Ввод токена -->
+  <div class="token-input" id="tokenSection">
+    <p><strong>GitHub токен:</strong></p>
+    <input type="password" id="tokenInput" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+    <button class="btn" onclick="saveToken()">💾 Сохранить токен</button>
+    <p style="font-size:12px;color:#a1a1aa;margin-top:10px;">
+      Токен сохранится в браузере. 
+      <a href="https://github.com/settings/tokens" target="_blank" style="color:#fbbf24">Создать новый токен</a>
+    </p>
+  </div>
+  
+  <div class="stats" id="stats"></div>
+  
+  <button class="btn" onclick="scanFiles()" id="scanBtn" style="display:none">📊 Сканировать файлы</button>
+  <button class="btn btn-danger" onclick="deleteSelected()" id="deleteBtn" style="display:none">
+    🗑️ Удалить выбранные (<span id="count">0</span>)
+  </button>
+  
+  <div class="file-list" id="fileList"></div>
+
+  <script>
+    let orphanedFiles = [];
+    let githubToken = '';
+    const REPO = 'Tanka2610/fedulina-works';
+
+    // Загружаем токен при старте
+    window.onload = function() {
+      const saved = localStorage.getItem('github_token');
+      if (saved) {
+        githubToken = saved;
+        document.getElementById('tokenSection').style.display = 'none';
+        document.getElementById('scanBtn').style.display = 'inline-block';
+      }
+    };
+
+    function saveToken() {
+      const input = document.getElementById('tokenInput').value.trim();
+      if (!input) {
+        alert('Введите токен!');
+        return;
+      }
+      githubToken = input;
+      localStorage.setItem('github_token', input);
+      document.getElementById('tokenSection').style.display = 'none';
+      document.getElementById('scanBtn').style.display = 'inline-block';
+      alert('Токен сохранён!');
+    }
+
+    async function scanFiles() {
+      if (!githubToken) {
+        alert('Сначала сохраните токен!');
+        return;
+      }
+
+      document.getElementById('fileList').innerHTML = '<p class="loading">🔄 Сканирование...</p>';
+      document.getElementById('stats').innerHTML = '';
+      
+      try {
+        // 1. Получаем все альбомы из data/
+        const albumsResponse = await fetch(`https://api.github.com/repos/${REPO}/contents/data`, {
+          headers: { 
+            'Authorization': `token ${githubToken}`,
+            'Accept': 'application/vnd.github.v3+json'
+          }
+        });
+        
+        if (!albumsResponse.ok) throw new Error('Не удалось загрузить список альбомов');
+        
+        const albums = await albumsResponse.json();
+        
+        // 2. Собираем все используемые фото
+        const usedPhotos = new Set();
+        for (const album of albums.filter(f => f.name.endsWith('.md'))) {
+          const content = await fetch(album.download_url).then(r => r.text());
+          // Ищем все пути к фото в YAML
+          const matches = content.match(/images\/portfolio\/[^\s"')\]]+/g) || [];
+          matches.forEach(url => {
+            const filename = url.split('/').pop();
+            if (filename) usedPhotos.add(filename);
+          });
+        }
+        
+        console.log('Используемые фото:', Array.from(usedPhotos));
+
+        // 3. Получаем все фото в папке images/portfolio
+        const photosResponse = await fetch(`https://api.github.com/repos/${REPO}/contents/images/portfolio`, {
+          headers: { 
+            'Authorization': `token ${githubToken}`,
+            'Accept': 'application/vnd.github.v3+json'
+          }
+        });
+        
+        if (!photosResponse.ok) throw new Error('Не удалось загрузить список фото');
+        
+        const allPhotos = await photosResponse.json();
+        
+        // 4. Находим неиспользуемые (исключаем системные файлы)
+        const excludeList = ['favicon-fot100.png', '.gitkeep'];
+        orphanedFiles = allPhotos
+          .filter(file => !usedPhotos.has(file.name))
+          .filter(file => !excludeList.includes(file.name))
+          .filter(file => file.type === 'file'); // только файлы, не папки
+        
+        // 5. Показываем результат
+        displayOrphans();
+        
+      } catch (error) {
+        console.error('Ошибка:', error);
+        document.getElementById('fileList').innerHTML = 
+          `<p style="color:#ef4444">❌ Ошибка: ${error.message}<br><small>Проверьте токен и доступ к репозиторию</small></p>`;
+      }
+    }
+
+    function displayOrphans() {
+      const stats = document.getElementById('stats');
+      const fileList = document.getElementById('fileList');
+      const deleteBtn = document.getElementById('deleteBtn');
+      
+      const totalSize = orphanedFiles.reduce((acc, f) => acc + (f.size || 0), 0);
+      
+      stats.innerHTML = `
+        <strong>📊 Найдено:</strong> ${orphanedFiles.length} неиспользуемых фото<br>
+        <strong>💾 Место:</strong> ~${(totalSize / 1024 / 1024).toFixed(2)} MB
+      `;
+      
+      if (orphanedFiles.length === 0) {
+        fileList.innerHTML = '<p>🎉 Всё чисто! Все фото используются в альбомах.</p>';
+        deleteBtn.style.display = 'none';
+        return;
+      }
+      
+      fileList.innerHTML = '<h3>🗑️ Неиспользуемые фото:</h3>' + 
+        orphanedFiles.map((file, index) => `
+          <div class="file-item">
+            <input type="checkbox" id="file-${index}" value="${file.path}" checked>
+            <img src="${file.download_url}" alt="${file.name}" onerror="this.style.display='none'">
+            <div>
+              <strong>${file.name}</strong><br>
+              <small>${file.size ? (file.size / 1024).toFixed(1) + ' KB' : '—'}</small>
+            </div>
+          </div>
+        `).join('');
+      
+      deleteBtn.style.display = 'inline-block';
+      updateCount();
+      
+      // Обновляем счётчик при изменении чекбоксов
+      document.querySelectorAll('#fileList input[type="checkbox"]').forEach(cb => {
+        cb.addEventListener('change', updateCount);
+      });
+    }
+
+    function updateCount() {
+      const count = document.querySelectorAll('#fileList input[type="checkbox"]:checked').length;
+      document.getElementById('count').textContent = count;
+    }
+
+    async function deleteSelected() {
+      const selected = Array.from(document.querySelectorAll('#fileList input[type="checkbox"]:checked'))
+        .map(cb => cb.value);
+      
+      if (selected.length === 0) {
+        alert('Выберите файлы для удаления');
+        return;
+      }
+      
+      if (!confirm(`⚠️ Удалить ${selected.length} файлов?\nЭто действие НЕОБРАТИМО!`)) {
+        return;
+      }
+      
+      let deleted = 0;
+      let errors = 0;
+      
+      for (const path of selected) {
+        try {
+          // 1. Получаем SHA файла (нужен для удаления)
+          const fileResponse = await fetch(`https://api.github.com/repos/${REPO}/contents/${path}`, {
+            headers: { 
+              'Authorization': `token ${githubToken}`,
+              'Accept': 'application/vnd.github.v3+json'
+            }
+          });
+          
+          if (!fileResponse.ok) {
+            errors++;
+            continue;
+          }
+          
+          const fileData = await fileResponse.json();
+          
+          // 2. Удаляем файл
+          const deleteResponse = await fetch(`https://api.github.com/repos/${REPO}/contents/${path}`, {
+            method: 'DELETE',
+            headers: { 
+              'Authorization': `token ${githubToken}`,
+              'Accept': 'application/vnd.github.v3+json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              message: `Cleanup: delete unused ${path}`,
+              sha: fileData.sha
+            })
+          });
+          
+          if (deleteResponse.ok) {
+            deleted++;
+          } else {
+            errors++;
+          }
+          
+        } catch (error) {
+          console.error(`Ошибка удаления ${path}:`, error);
+          errors++;
+        }
+      }
+      
+      alert(`✅ Удалено: ${deleted}\n❌ Ошибок: ${errors}`);
+      
+      // Пересканировать
+      if (deleted > 0) {
+        scanFiles();
+      }
+    }
+  </script>
+</body>
+</html>
