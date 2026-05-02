@@ -1,3 +1,15 @@
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Твоя страница</title>
+  
+  <!-- FAVICON -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/fedulina-works/images/favicon-fot100.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/fedulina-works/images/favicon-fot100.png">
+  <link rel="icon" type="image/x-icon" href="/fedulina-works/favicon.ico">
+  
+  <!-- Остальные стили/скрипты -->
+</head>
 backend:
   name: github
   repo: Tanka2610/fedulina-works
